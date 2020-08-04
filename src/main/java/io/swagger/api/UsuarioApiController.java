@@ -45,7 +45,8 @@ public class UsuarioApiController implements UsuarioApi {
 	public ResponseEntity<Usuario> createUser(
 			@ApiParam(value = "Cadastro de Usuário", required = true) @Valid @RequestBody Usuario body) {
 		try {
-			Usuario usuario = this.usuarioRepository.save(body);
+			Usuario usuario = this.usuarioRepository.save(new Usuario(body.getNome(), body.getUsuario(),
+					body.getSenha(), body.getEmail(), body.getTelefone()));
 			return ResponseEntity.ok().body(usuario);
 		} catch (Exception e) {
 			log.error("Erro: ", e);

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Built-By: conrado
 Build-Jdk: 11.0.8
-Implementation-Title: swagger-spring
+Implementation-Title: crudUsuarioApi
 Implementation-Version: 1.0.0
 Implementation-Vendor-Id: io.swagger
 Implementation-Vendor: Pivotal Software, Inc.
