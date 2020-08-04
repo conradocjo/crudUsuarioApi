@@ -1,4 +1,4 @@
-# crudUsuarioApi (API ainda está em desenvolvimento)
+# crudUsuarioApi
 
 Este projeto consiste em um simples crud de usuários usando Springboot e Swagger. 
 
