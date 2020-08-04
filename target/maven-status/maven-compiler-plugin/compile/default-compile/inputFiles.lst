@@ -1,4 +1,5 @@
 /home/conrado/PROJETOS/crudUsuarioApi/src/main/java/io/swagger/configuration/SwaggerDocumentationConfig.java
+/home/conrado/PROJETOS/crudUsuarioApi/src/main/java/io/swagger/utils/TratativasUteis.java
 /home/conrado/PROJETOS/crudUsuarioApi/src/main/java/io/swagger/repository/UsuarioRepository.java
 /home/conrado/PROJETOS/crudUsuarioApi/src/main/java/io/swagger/model/Usuario.java
 /home/conrado/PROJETOS/crudUsuarioApi/src/main/java/io/swagger/api/ApiOriginFilter.java
@@ -8,6 +9,7 @@
 /home/conrado/PROJETOS/crudUsuarioApi/src/main/java/io/swagger/api/UsuarioApi.java
 /home/conrado/PROJETOS/crudUsuarioApi/src/main/java/io/swagger/api/UsuarioApiController.java
 /home/conrado/PROJETOS/crudUsuarioApi/src/main/java/io/swagger/configuration/CustomInstantDeserializer.java
+/home/conrado/PROJETOS/crudUsuarioApi/src/main/java/io/swagger/utils/ApiUtils.java
 /home/conrado/PROJETOS/crudUsuarioApi/src/main/java/io/swagger/api/ApiException.java
 /home/conrado/PROJETOS/crudUsuarioApi/src/main/java/io/swagger/configuration/HomeController.java
 /home/conrado/PROJETOS/crudUsuarioApi/src/main/java/io/swagger/api/NotFoundException.java

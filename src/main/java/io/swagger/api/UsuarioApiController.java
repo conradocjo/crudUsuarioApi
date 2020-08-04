@@ -1,7 +1,10 @@
 package io.swagger.api;
 
+import static io.swagger.utils.ApiUtils.getHeaderLocation;
+import static io.swagger.utils.TratativasUteis.isListNotEmpty;
+import static java.util.Objects.nonNull;
+
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +50,7 @@ public class UsuarioApiController implements UsuarioApi {
 		try {
 			Usuario usuario = this.usuarioRepository.save(new Usuario(body.getNome(), body.getUsuario(),
 					body.getSenha(), body.getEmail(), body.getTelefone()));
-			return ResponseEntity.ok().body(usuario);
+			return new ResponseEntity<Usuario>(usuario, getHeaderLocation(), HttpStatus.CREATED);
 		} catch (Exception e) {
 			log.error("Erro: ", e);
 			return new ResponseEntity<Usuario>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -55,15 +58,30 @@ public class UsuarioApiController implements UsuarioApi {
 	}
 
 	public ResponseEntity<Void> deleteUser(
-			@ApiParam(value = "Id do usuário que será deletado.", required = true) @PathVariable("id") String id) {
-		String accept = request.getHeader("Accept");
-		return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+			@ApiParam(value = "Id do usuário que será deletado.", required = true) @PathVariable("id") Long id) {
+		try {
+			if (nonNull(id)) {
+				Usuario usuario = this.usuarioRepository.findOne(id);
+				if (nonNull(usuario)) {
+					this.usuarioRepository.delete(usuario);
+				} else {
+					throw new Exception("Usuario não encontrado.");
+				}
+			}
+			return new ResponseEntity<Void>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	public ResponseEntity<List<Usuario>> getAllUsers() {
 		try {
 			List<Usuario> usuarios = this.usuarioRepository.findAll();
-			return ResponseEntity.ok().body(usuarios);
+			if (isListNotEmpty(usuarios)) {
+				return new ResponseEntity<List<Usuario>>(usuarios, getHeaderLocation(), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<List<Usuario>>(HttpStatus.NOT_FOUND);
+			}
 		} catch (Exception e) {
 			log.error("ERRO:", e);
 			return new ResponseEntity<List<Usuario>>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -74,14 +92,19 @@ public class UsuarioApiController implements UsuarioApi {
 	public ResponseEntity<List<Usuario>> getUserByPartName(
 			@ApiParam(value = "Parametro, consiste em parte do nome para filtro de usuários no sistema.", required = true) @PathVariable("parteDoNome") String parteDoNome) {
 		try {
-//			List<Usuario> usuarios = Arrays
-//					.asList(new Usuario("Conrado", "CJOLIVEIRA", "koasker", "conrado.teste@api.com", "999999999"));
-			return ResponseEntity.ok().body(null);
+			if (nonNull(parteDoNome)) {
+				List<Usuario> usuarios = this.usuarioRepository.buscarUsuarioPorParteDoNome("%".concat(parteDoNome.toUpperCase()).concat("%"));
+				if (isListNotEmpty(usuarios)) {
+					return new ResponseEntity<List<Usuario>>(usuarios, getHeaderLocation(), HttpStatus.OK);
+				} else {
+					return new ResponseEntity<List<Usuario>>(HttpStatus.NOT_FOUND);
+				}
+			}
 		} catch (Exception e) {
 			log.error("Couldn't serialize response for content type application/json", e);
 			return new ResponseEntity<List<Usuario>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-
+		return null;
 	}
 
 	public ResponseEntity<Usuario> updateUser(
