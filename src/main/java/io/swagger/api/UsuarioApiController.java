@@ -4,7 +4,6 @@ import static io.swagger.utils.ApiUtils.getHeaderLocation;
 import static io.swagger.utils.TratativasUteis.isListNotEmpty;
 import static java.util.Objects.nonNull;
 
-import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +31,7 @@ public class UsuarioApiController implements UsuarioApi {
 
 	private static final Logger log = LoggerFactory.getLogger(UsuarioApiController.class);
 
+	@SuppressWarnings("unused")
 	private final ObjectMapper objectMapper;
 
 	private final HttpServletRequest request;
@@ -83,7 +83,7 @@ public class UsuarioApiController implements UsuarioApi {
 				return new ResponseEntity<List<Usuario>>(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
-			log.error("ERRO:", e);
+			log.error("ERRO: ", e);
 			return new ResponseEntity<List<Usuario>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
@@ -93,7 +93,8 @@ public class UsuarioApiController implements UsuarioApi {
 			@ApiParam(value = "Parametro, consiste em parte do nome para filtro de usuários no sistema.", required = true) @PathVariable("parteDoNome") String parteDoNome) {
 		try {
 			if (nonNull(parteDoNome)) {
-				List<Usuario> usuarios = this.usuarioRepository.buscarUsuarioPorParteDoNome("%".concat(parteDoNome.toUpperCase()).concat("%"));
+				List<Usuario> usuarios = this.usuarioRepository
+						.buscarUsuarioPorParteDoNome("%".concat(parteDoNome.toUpperCase()).concat("%"));
 				if (isListNotEmpty(usuarios)) {
 					return new ResponseEntity<List<Usuario>>(usuarios, getHeaderLocation(), HttpStatus.OK);
 				} else {
@@ -101,7 +102,7 @@ public class UsuarioApiController implements UsuarioApi {
 				}
 			}
 		} catch (Exception e) {
-			log.error("Couldn't serialize response for content type application/json", e);
+			log.error("Erro: ", e);
 			return new ResponseEntity<List<Usuario>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return null;
@@ -112,11 +113,12 @@ public class UsuarioApiController implements UsuarioApi {
 		String accept = request.getHeader("Accept");
 		if (accept != null && accept.contains("application/json")) {
 			try {
-				return new ResponseEntity<Usuario>(objectMapper.readValue(
-						"{  \"senha\" : \"senha\",  \"telefone\" : \"telefone\",  \"nome\" : \"nome\",  \"usuario\" : \"usuario\",  \"id\" : 0,  \"email\" : \"email\",  \"status\" : \"ATIVO\"}",
-						Usuario.class), HttpStatus.NOT_IMPLEMENTED);
-			} catch (IOException e) {
-				log.error("Couldn't serialize response for content type application/json", e);
+				if (nonNull(body)) {
+					Usuario usuario = this.usuarioRepository.save(body);
+					return new ResponseEntity<Usuario>(usuario, getHeaderLocation(), HttpStatus.OK);
+				}
+			} catch (Exception e) {
+				log.error("ERRO: ", e);
 				return new ResponseEntity<Usuario>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
